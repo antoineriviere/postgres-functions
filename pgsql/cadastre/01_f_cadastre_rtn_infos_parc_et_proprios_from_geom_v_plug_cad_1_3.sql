@@ -46,49 +46,49 @@ BEGIN
  
 
 string_sql := $s$
-		select 
-		geo_parcelle.geo_parcelle,	-- identifiant unique de parcelle
-		geo_parcelle.geom, -- geometry(MultiPolygon,2154)
+select 
+	geo_parcelle.geo_parcelle,	-- identifiant unique de parcelle
+	geo_parcelle.geom, -- geometry(MultiPolygon,2154)
 
-      parcelle.jdatat parc_jdatat, -- Date de l acte - jjmmaaaa
-      parcelle.ccodep parc_ccodep , -- code département -
-      parcelle.ccocom parc_ccocom, -- Code commune INSEE ou DGI d’arrondissement -
-      TRIM(commune.libcom)::character varying(30) as  parc_libcom  ,  -- nom de la commune de la parcelle
-      parcelle.ccosec parc_ccosec  , -- Section cadastrale -
-      ltrim(parcelle.dnupla, '0')::character varying(4)  parc_dnupla, -- Numéro de plan -
+      	parcelle.jdatat parc_jdatat, -- Date de l acte - jjmmaaaa
+      	parcelle.ccodep parc_ccodep , -- code département -
+      	parcelle.ccocom parc_ccocom, -- Code commune INSEE ou DGI d’arrondissement -
+      	TRIM(commune.libcom)::character varying(30) as  parc_libcom  ,  -- nom de la commune de la parcelle
+      	parcelle.ccosec parc_ccosec  , -- Section cadastrale -
+      	ltrim(parcelle.dnupla, '0')::character varying(4)  parc_dnupla, -- Numéro de plan -
 
-      parcelle.dnvoiri parc_dnvoiri    , -- Numéro de voirie -
-      parcelle.cconvo parc_cconvo    , -- Code nature de la voie
-      parcelle.dvoilib parc_dvoilib    , -- Libellé de la voie
+      	parcelle.dnvoiri parc_dnvoiri    , -- Numéro de voirie -
+      	parcelle.cconvo parc_cconvo    , -- Code nature de la voie
+      	parcelle.dvoilib parc_dvoilib    , -- Libellé de la voie
 
 
-      parcelle.dnupro   parc_dnupro    , -- Compte communal du propriétaire de la parcelle -
+      	parcelle.dnupro   parc_dnupro    , -- Compte communal du propriétaire de la parcelle -
 
-      ccodro.ccodro_lib  proprio_ccodro_lib    , -- code du droit réel ou particulier - Nouveau code en 2009 : C (fiduciaire)
-      ccodem.ccodem_lib  proprio_ccodem_lib    , -- code du démembrement/indivision - C S L I V
-      proprietaire.gdesip   proprio_gdesip    , -- indicateur du destinataire de l’avis d’imposition - 1 = oui    , 0 = non
-      proprietaire.gtoper   proprio_gtoper    , -- indicateur de personne physique ou morale - 1 = physique, 2 = morale
+      	ccodro.ccodro_lib  proprio_ccodro_lib    , -- code du droit réel ou particulier - Nouveau code en 2009 : C (fiduciaire)
+      	ccodem.ccodem_lib  proprio_ccodem_lib    , -- code du démembrement/indivision - C S L I V
+      	proprietaire.gdesip   proprio_gdesip    , -- indicateur du destinataire de l’avis d’imposition - 1 = oui    , 0 = non
+      	proprietaire.gtoper   proprio_gtoper    , -- indicateur de personne physique ou morale - 1 = physique, 2 = morale
                                                 -- [  donc si morale (2)  utiliser proprio_ddenom 
                                                 -- si physique utiliser la batterie de colonnes qui suit]
                                                 --Voir publipost_prop_nom (champ qui associe ces éléments)
        
 
-      proprietaire.dformjur  proprio_dformjur    , -- Forme juridique (Depuis 2013)
-      proprietaire.dqualp   proprio_dqualp    , -- Qualité abrégée - M , MME ou MLE
-      proprietaire.ddenom  proprio_ddenom    , -- Dénomination de personne physique ou morale -
-      proprietaire.dnomus   proprio_dnomus    , -- Nom d'usage (Depuis 2015)
-      proprietaire.dprnus   proprio_dprnus    , -- Prénom d'usage (Depuis 2015)
+      	proprietaire.dformjur  proprio_dformjur    , -- Forme juridique (Depuis 2013)
+      	proprietaire.dqualp   proprio_dqualp    , -- Qualité abrégée - M , MME ou MLE
+      	proprietaire.ddenom  proprio_ddenom    , -- Dénomination de personne physique ou morale -
+      	proprietaire.dnomus   proprio_dnomus    , -- Nom d'usage (Depuis 2015)
+      	proprietaire.dprnus   proprio_dprnus    , -- Prénom d'usage (Depuis 2015)
 
 
-      proprietaire.jdatnss  proprio_jdatnss    , -- date de naissance - sous la forme jj/mm/aaaa
-      proprietaire.dldnss   proprio_dldnss    , -- lieu de naissance -
-      proprietaire.epxnee   proprio_epxnee    , -- mention du complément - EPX ou NEE si complément
-      proprietaire.dnomcp   proprio_dnomcp    , -- Nom complément -
-      proprietaire.dprncp  proprio_dprncp    , -- Prénoms associés au complément -
-      proprietaire.dlign3  proprio_dlign3    , -- 3eme ligne d’adresse -
-      proprietaire.dlign4  proprio_dlign4    , -- 4eme ligne d’adresse -
-      proprietaire.dlign5  proprio_dlign5    , -- 5eme ligne d’adresse -
-      proprietaire.dlign6  proprio_dlign6 ,     -- 6eme ligne d’adresse -
+      	proprietaire.jdatnss  proprio_jdatnss    , -- date de naissance - sous la forme jj/mm/aaaa
+      	proprietaire.dldnss   proprio_dldnss    , -- lieu de naissance -
+      	proprietaire.epxnee   proprio_epxnee    , -- mention du complément - EPX ou NEE si complément
+      	proprietaire.dnomcp   proprio_dnomcp    , -- Nom complément -
+      	proprietaire.dprncp  proprio_dprncp    , -- Prénoms associés au complément -
+      	proprietaire.dlign3  proprio_dlign3    , -- 3eme ligne d’adresse -
+      	proprietaire.dlign4  proprio_dlign4    , -- 4eme ligne d’adresse -
+      	proprietaire.dlign5  proprio_dlign5    , -- 5eme ligne d’adresse -
+      	proprietaire.dlign6  proprio_dlign6 ,     -- 6eme ligne d’adresse -
 
       /*case when proprietaire.gtoper = '1' THEN ''
          WHEN  proprietaire.gtoper = '2' THEN coalesce(proprietaire.dformjur,'') || ' ' || coalesce( proprietaire.ddenom,'')
@@ -140,62 +140,56 @@ string_sql := $s$
 
 
 
-         $s$ ;
+$s$ ;
 																																																			-- indique le destinataire 
 	
 
 
-			--RAISE NOTICE 'rq_find : %', string_sql::text;
-			FOR rq_find in EXECUTE string_sql
-			LOOP 
-					RETURN QUERY select 
+--RAISE NOTICE 'rq_find : %', string_sql::text;
+FOR rq_find in EXECUTE string_sql LOOP 
+	RETURN QUERY select 
 					--true,	
-               rq_find.geo_parcelle,
-					rq_find.geom,
-               rq_find.parc_jdatat,
-               rq_find.parc_ccodep, 
-               rq_find.parc_ccocom, 
-               rq_find.parc_libcom ,
-               rq_find.parc_ccosec, 
-               rq_find.parc_dnupla,
-               rq_find.parc_dnvoiri, 
-               rq_find.parc_cconvo, 
-               rq_find.parc_dvoilib, 
-               rq_find.parc_dnupro, 
-               rq_find.proprio_ccodro_lib,
-               rq_find.proprio_ccodem_lib, 
-               rq_find.proprio_gdesip, 
-               rq_find.proprio_gtoper, 
-               rq_find.proprio_dformjur, 
-               rq_find.proprio_dqualp, 
-               rq_find.proprio_ddenom, 
-               rq_find.proprio_dnomus, 
-               rq_find.proprio_dprnus, 
-               rq_find.proprio_jdatnss, 
-               rq_find.proprio_dldnss, 
-               rq_find.proprio_epxnee, 
-               rq_find.proprio_dnomcp, 
-               rq_find.proprio_dprncp, 
-               rq_find.proprio_dlign3, 
-               rq_find.proprio_dlign4, 
-               rq_find.proprio_dlign5, 
-               rq_find.proprio_dlign6,
-               rq_find.publipost_prop_nom,
-               rq_find.publipost_prop_adresse1,
-               rq_find.publipost_prop_adresse2,
-               rq_find.publipost_prop_adresse3,
-               rq_find.publipost_prop_adresse4,
-               rq_find.geom_etiquette_position_point,
+	rq_find.geo_parcelle,
+	rq_find.geom,
+	rq_find.parc_jdatat,
+	rq_find.parc_ccodep, 
+	rq_find.parc_ccocom, 
+	rq_find.parc_libcom ,
+	rq_find.parc_ccosec, 
+	rq_find.parc_dnupla,
+	rq_find.parc_dnvoiri, 
+	rq_find.parc_cconvo, 
+	rq_find.parc_dvoilib, 
+	rq_find.parc_dnupro, 
+	rq_find.proprio_ccodro_lib,
+	rq_find.proprio_ccodem_lib, 
+	rq_find.proprio_gdesip, 
+	rq_find.proprio_gtoper, 
+	rq_find.proprio_dformjur, 
+	rq_find.proprio_dqualp, 
+	rq_find.proprio_ddenom, 
+	rq_find.proprio_dnomus, 
+	rq_find.proprio_dprnus, 
+	rq_find.proprio_jdatnss, 
+	rq_find.proprio_dldnss, 
+	rq_find.proprio_epxnee, 
+	rq_find.proprio_dnomcp, 
+	rq_find.proprio_dprncp, 
+	rq_find.proprio_dlign3, 
+	rq_find.proprio_dlign4, 
+	rq_find.proprio_dlign5, 
+	rq_find.proprio_dlign6,
+	rq_find.publipost_prop_nom,
+	rq_find.publipost_prop_adresse1,
+	rq_find.publipost_prop_adresse2,
+	rq_find.publipost_prop_adresse3,
+	rq_find.publipost_prop_adresse4,
+	rq_find.geom_etiquette_position_point,
 
-               rq_find.proprio_dnomlp, 
-               rq_find.proprio_dprnlp
-
-              ;
-
-			
-			end loop;
-				
-			
+	rq_find.proprio_dnomlp, 
+	rq_find.proprio_dprnlp
+	;	
+end loop;
 
 END;
 $BODY$
